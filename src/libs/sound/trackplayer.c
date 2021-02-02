@@ -513,7 +513,7 @@ SpliceTrack (UNICODE *TrackName, UNICODE *TrackText, UNICODE *TimeStamp, Callbac
 		num_pages = SplitSubPages (TrackText, pages, time_stamps, MAX_PAGES);
 		if (num_pages == 0)
 		{
-			log_add (log_Warning, "SpliceTrack(): Failed to parse sutitles");
+			log_add (log_Warning, "SpliceTrack(): Failed to parse subtitles");
 			return;
 		}
 		// The last page's stamp is a suggested value. The track should
@@ -578,7 +578,7 @@ SpliceTrack (UNICODE *TrackName, UNICODE *TrackText, UNICODE *TimeStamp, Callbac
 				chunks_tail = chunks_tail->next;
 			}
 			dec_offset += (unsigned long)(decoder->length * 1000);
-#if 0
+#ifdef DEBUG
 			log_add (log_Debug, "page (%d of %d): %d ts: %d",
 					page, num_pages,
 					dec_offset, time_stamps[page]);

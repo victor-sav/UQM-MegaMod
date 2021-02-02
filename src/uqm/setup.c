@@ -137,6 +137,9 @@ LoadKernel (int argc, char *argv[], BOOLEAN ReloadPackages)
 
 	if (!IS_HD)
 	{
+#if defined(SWITCH) || defined(__SWITCH)
+        loadAddon("switch-sd");
+#endif
 		EndlessSCLoaded = loadAddon ("EndlessSC-SD");
 		solTexturesPresent = loadAddon ("sol-textures-sd");
 		loadAddon ("yellow-fried-sd");
@@ -145,12 +148,20 @@ LoadKernel (int argc, char *argv[], BOOLEAN ReloadPackages)
 	{
 		log_add (log_Debug, "loading HD addon pack");
 		HDPackPresent = TRUE;
+#if defined(SWITCH) || defined(__SWITCH)
+        loadAddon("switch-hd");
+#endif
 		solTexturesPresent = loadAddon ("sol-textures-hd");
 		loadAddon ("yellow-fried-hd");
 		loadAddon ("orange-peel-melnorme");
 		loadAddon ("classic-hd-fonts");
 		loadAddon ("tarps-choice");
 	}
+
+#if defined(SWITCH) || defined(__SWITCH)
+    loadAddon("switch");
+    loadAddon("switch-extra");
+#endif
 
 	loadAddon ("ProfanePkunk");
 

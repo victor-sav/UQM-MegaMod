@@ -128,6 +128,7 @@ static WIDGET *main_widgets[] = {
 
 static WIDGET *graphics_widgets[] = {
 	(WIDGET *)(&choices[0]),	// Resolution
+#if !defined(SWITCH) || !defined(__SWITCH__)
 	(WIDGET *)(&choices[42]),	// Scale GFX
 #if	SDL_MAJOR_VERSION == 1
 #if defined (HAVE_OPENGL)
@@ -139,9 +140,13 @@ static WIDGET *graphics_widgets[] = {
 #if SDL_MAJOR_VERSION == 1 // Gamma correction isn't supported on SDL2
 	(WIDGET *)(&sliders[3]),	// Gamma Correction
 #endif
+#endif
 	(WIDGET *)(&choices[2]),	// Scaler
 	(WIDGET *)(&choices[3]),	// Scanlines	
 	(WIDGET *)(&choices[12]),	// Show FPS
+#if defined(SWITCH) || defined(__SWITCH__)
+    (WIDGET *)(&labels[4]),		// Spacer
+#endif
 	(WIDGET *)(&buttons[1]),
 	NULL };
 
@@ -168,10 +173,12 @@ static WIDGET *audio_widgets[] = {
 	(WIDGET *)(&sliders[0]),	// Music Volume
 	(WIDGET *)(&sliders[1]),	// SFX Volume
 	(WIDGET *)(&sliders[2]),	// Speech Volume
+#if !defined(SWITCH) || !defined(__SWITCH__)
 	(WIDGET *)(&labels[4]),		// Spacer
 	(WIDGET *)(&choices[14]),	// Positional Audio
 	(WIDGET *)(&choices[15]),	// Sound Driver
 	(WIDGET *)(&choices[16]),	// Sound Quality
+#endif
 	(WIDGET *)(&labels[4]),		// Spacer
 	(WIDGET *)(&buttons[1]),
 	NULL };

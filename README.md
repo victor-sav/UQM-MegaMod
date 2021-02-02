@@ -1,88 +1,125 @@
-# The Ur-Quan Masters MegaMod
-A fork of The Ur-Quan Masters that continues the HD mod with a veritable smorgasbord of extra features.
+# The Ur-Quan Masters MegaMod for Switch
+A fork of The Ur-Quan Masters MegaMod by Serosis that runs on the Nintendo Switch as a Homebrew.
 
-## Changes from the original
+## Changes from the MegaMod
 
-A full list of changes and features can be found on the [Main site](http://megamod.serosis.net/Features).
-
-And the current changelog can be found in the repository: [Changelog](https://github.com/Serosis/UQM-MegaMod/blob/master/MegaMod%20Changelog.txt)
+* A `build.sh` wrapper that takes care of the switch building.
+* A new "switch" autoloading addon that provides a few switch specific fixes.
 
 ## Motivation
 
-This project exists out of my love for Star Control II and The Ur-Quan Masters project. Fiddling with the code as a hobby to try and expand my skill as a programmer.
-
-## Windows Installation
-
-Open up the installer, pick your optional content, wait for all of it to download and install, then play!
-
-## MacOS X Installation
-
-Mount the .dmg file and copy the app to your Applications folder.
+Just like Serosis, I made this port out of my love for Star Control II and The Ur-Quan Masters project. Fiddling with the code as a hobby to try and expand my skill as a programmer.
 
 ## Building Yourself
 
-### Windows
+### Linux
 
-#### Visual Studio 
-I've made the process super easy for Windows, as long as you have Visual Studio 2008 or Visual Studios 2015-2019. Just load up the solution file and compile away.
-For Visual Studio 2008 the solution file is under `build/msvs2008` for Visual Studios 2015-2019 the solution file is under `build/msvs2019`
+Make sure you've installed the [devkitPro](https://devkitpro.org/wiki/devkitPro_pacman) and the required packages for the switch development, and have DEVKITPRO in your environment
 
-#### MSYS2
+    
+    export DEVKITPRO=/opt/devkitpro
+    # pacman -S switch-dev switch-portlibs
 
-Make sure you've installed all the necessary packes by executing these two commands in the MSYS2 bash:
 
-	pacman -Syuu
+Then, `cd` into the project folder and run the build script:
 
-then
+    
+    $ ./build-switch.sh build
 
-	pacman -S make pkg-config mingw-w64-i686-gcc mingw-w64-i686-libogg \
-		mingw-w64-i686-libpng mingw-w64-i686-libsystre \
-		mingw-w64-i686-libvorbis mingw-w64-i686-SDL2 mingw-w64-i686-zlib
-
-Start a MSYS2 MinGW 32-bit bash, `cd` to the UQM-MegaMod directory, then execute this command: 
-
-	./build.sh uqm 
-
-When executing this command for the first time you'll come to a configuration screen where you can select a few developer-centric options.
-Just hit enter and UQM will start building. It'll take awhile and you'll see a few scary warnings but everything should build fine.
-
-Missing .dll can be found in the MSYS2 installation folder under `mingw32\bin\`
+That will compile the game and put the binary and the nro in `bin/switch`
 
 ### Other Platforms
-You'll have to gather all of the necessary dependencies and hope for the best.
 
-#### Tips
+I'm not sure, but it should not be too different. DevkitPro installs the same and you will need to use MSYS2 on Windows.
 
-For all platforms when building from commandline you can use the command `-j#` to invoke multi-threaded performance to dramaticly speed up build time.  
-Example: If you're running on a Ryzen 7 2700x you can use the command like so `./build.sh -j16 uqm` to take advantage of all your threads.
 
-## Fixes
+## Installing
 
-### Windows
+1. Copy the contents of the release zip file to your `sdmc:/switch/` folder
+2. Run the game through the hbmenu
 
-#### Image Cut-off in fullscreen
+Game content like `mm-0.8.0.85-content.uqm` goes in the `content/packages` folder relative to the NRO.
 
-The most common contributor to this is the Windows built in DPI settings that scales UI for larger resolutions.
-You can fix this one of two ways, by setting the UI scaling in Windows to 100% or overriding the scaling on UQM itself.
+All the extra addons like `mm-0.8.0.85-hd.uqm` and `uqm-0.7.0-3dovideo.uqm` go in `content/addons`.
 
-For overriding on UQM itself:  
-Right click on the EXE -> click `Properties` -> click over to the `Compatibility` tab -> click `Change high DPI settings` -> click `Override high DPI scaling behavior` -> set `Scaling performed by:` to `Application`  
-It should look like this:  
-![image](https://user-images.githubusercontent.com/4404965/80047996-bb0e7f00-84c3-11ea-8914-85509e2fb623.png)
+You can download more addons on the [MegaMod site](http://megamod.serosis.net/Releases).
+
+## Bugs
+
+* The game occasionally crashes on start
+* When using the HD content, most settings screens in the main menu become almost unusable because of lagging
+  * Same thing happens occasionally during dialogue sequences
+  * The rest of the game plays perfectly well, although the loadings are slightly longer. Seems like a threading issue
 
 ## Controllers
 
-When using a DualShock 4 controller *DO NOT* use DS4Windows. UQM and hence, MegaMod, support the DS4 without extra software.
-The new controller layout option only works if you *don't* use DS4Windows.
+The game is configured to use **Joycon 1** and **Joycon 2** by default, so it should be playable out of the box. You can adjust the controls in the settings, in `content/*.key` and `config/flight.cfg`
 
-Have a lovely day!
+### Default Controls
 
+#### Menu / Game
+
+| Control      | Keys                                   |
+| ------------ |:--------------------------------------:|
+| Up           | Joycon 1: DPAD Up, Left Stick Up       |
+| Down         | Joycon 1: DPAD Down, Left Stick Down   |
+| Left         | Joycon 1: DPAD Left, Left Stick Left   |
+| Right        | Joycon 1: DPAD Right, Left Stick Right |
+| Select       | Joycon 1: A, Y                         |
+| Cancel       | Joycon 1: B, X                         |
+| Special      | Joycon 1: Right Stick (RS)             |
+| Toggle Map   | Joycon 1: ZL                           |
+| Map Search   | Joycon 1: ZR                           |
+| Map Zoom In  | Joycon 1: R                            |
+| Map Zoom Out | Joycon 1: L                            |
+| Pause        | Joycon 1: Plus                         |
+| Exit Game    | Joycon 1: Minus                        |
+
+#### Melee
+
+| Control | Player 1                               | Player 2                               |
+| ------- |:--------------------------------------:|:--------------------------------------:|
+| Up      | Joycon 1: DPAD Up, Left Stick Up       | Joycon 2: DPAD Up, Left Stick Up       |
+| Down    | Joycon 1: DPAD Down, Left Stick Down   | Joycon 2: DPAD Down, Left Stick Down   |
+| Left    | Joycon 1: DPAD Left, Left Stick Left   | Joycon 2: DPAD Left, Left Stick Left   |
+| Right   | Joycon 1: DPAD Right, Left Stick Right | Joycon 2: DPAD Right, Left Stick Right |
+| Weapon  | Joycon 1: A, ZR                        | Joycon 2: A, ZR                        |
+| Special | Joycon 1: X, ZL                        | Joycon 2: X, ZL                        |
+| Escape  | Joycon 1: B, Plus                      | Joycon 2: B, Plus                      |
+| Thrust  | Joycon 1: Y                            | Joycon 2: Y                            |
+
+### Joycon Keymap
+
+Here is the Joycon mapping for the config files:
+
+| KEY      | ID   |
+| -------- |:----:|
+| A        | 0    |
+| B        | 1    |
+| X        | 2    |
+| Y        | 3    |
+| LSTICK   | 4    |
+| RSTICK   | 5    |
+| LBUMPER  | 6    |
+| RBUMPER  | 7    |
+| LTRIGGER | 8    |
+| RTRIGGER | 9    |
+| PLUS     | 10   |
+| MINUS    | 11   |
+| DPADL    | 12   |
+| DPADU    | 13   |
+| DPADR    | 14   |
+| DPADD    | 15   |
+
+## About MegaMod
+
+A full list of changes and features can be found on the [Main site](http://megamod.serosis.net/Features).
 
 ## Contributors
 
-Me (Serosis), SlightlyIntelligentMonkey, Volasaurus, Ala-lala, and Kruzenshtern
+Me (victor.sav), Serosis, SlightlyIntelligentMonkey, Volasaurus, Ala-lala, and Kruzenshtern
 
-The main menu music for the MegaMod is brought to you by Saibuster A.K.A. Itamar.Levy: http://star-control.com/fan/music/Various/saibuster-hyprespace.mp3, Mark Vera A.K.A. Jouni Airaksinen: https://www.youtube.com/watch?v=rsSc7x-p4zw, and Rush AX: http://star-control.com/fan/music/Rush/HSpace%20Rush%20MIX.mp3
+The main menu music for the MegaMod is brought to you by Saibuster A.K.A. Itamar.Levy: https://soundcloud.com/itamar-levy-1/star-control-hyperdrive-remix, Mark Vera A.K.A. Jouni Airaksinen: https://www.youtube.com/watch?v=rsSc7x-p4zw, and Rush AX: http://star-control.com/fan/music.php.
 
 And the default Super Melee menu music is by Flashy of Infinitum.
 

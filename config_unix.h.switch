@@ -11,53 +11,53 @@
 #define CONFIG_UNIX_H_
 
 /* Directory where the UQM game data is located */
-#define CONTENTDIR "@CONTENTDIR@"
+#define CONTENTDIR "/uqm-megamod/content"
 
 /* Directory where game data will be stored */
-#define USERDIR CONTENTDIR "/.."
+#define USERDIR "."
 
 /* Directory where config files will be stored */
-#define CONFIGDIR USERDIR "/config"
+#define CONFIGDIR "./config"
 
 /* Directory where supermelee teams will be stored */
-#define MELEEDIR "${UQM_CONFIG_DIR}/teams/"
+#define MELEEDIR "./config/teams"
 
 /* Directory where save games will be stored */
-#define SAVEDIR "${UQM_CONFIG_DIR}/save/"
+#define SAVEDIR "./config/save"
 
 /* Defined if words are stored with the most significant byte first */
-@WORDS_BIGENDIAN@
+#undef WORDS_BIGENDIAN
 
 /* Defined if your system has readdir_r of its own */
-@HAVE_READDIR_R@
+#define HAVE_READDIR_R
 
 /* Defined if your system has setenv of its own */
-@HAVE_SETENV@
+#define HAVE_SETENV
 
 /* Defined if your system has strupr of its own */
-@HAVE_STRUPR@
+#undef HAVE_STRUPR
 
 /* Defined if your system has strcasecmp of its own */
-@HAVE_STRCASECMP_UQM@
+#define HAVE_STRCASECMP_UQM
 		// Not using "HAVE_STRCASECMP" as that conflicts with SDL.
 
 /* Defined if your system has stricmp of its own */
-@HAVE_STRICMP@
+#undef HAVE_STRICMP
 
 /* Defined if your system has getopt_long */
-@HAVE_GETOPT_LONG@
+#define HAVE_GETOPT_LONG
 
 /* Defined if your system has iswgraph of its own*/
-@HAVE_ISWGRAPH@
+#define HAVE_ISWGRAPH
 
 /* Defined if your system has wchar_t of its own */
-@HAVE_WCHAR_T@
+#define HAVE_WCHAR_T
 
 /* Defined if your system has wint_t of its own */
-@HAVE_WINT_T@
+#define HAVE_WINT_T
 
 /* Defined if your system has _Bool of its own */
-@HAVE__BOOL@
+#define HAVE__BOOL
 
 #endif  /* CONFIG_UNIX_H_ */
 

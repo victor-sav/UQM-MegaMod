@@ -244,11 +244,15 @@ getHomeDir (void)
 	return getenv ("HOME");
 #else
 	const char *home;
-	struct passwd *pw;
 
 	home = getenv ("HOME");
 	if (home != NULL)
 		return home;
+
+#if defined(SWITCH) || defined(__SWITCH__)
+	return NULL;
+#else
+    struct passwd *pw;
 
 	pw = getpwuid (getuid ());
 	if (pw == NULL)
@@ -256,6 +260,7 @@ getHomeDir (void)
 	// NB: pw points to a static buffer.
 
 	return pw->pw_dir;
+#endif
 #endif
 }
 

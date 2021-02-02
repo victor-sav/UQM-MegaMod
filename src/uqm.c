@@ -78,6 +78,41 @@ static void SDLCALL AndroidAppRestoredCallback(void) {
 }
 #endif
 
+#if defined(SWITCH) || defined(__SWITCH__)
+#ifdef DEBUG
+#include "switch/services/ssl.h"
+#include "switch/runtime/nxlink.h"
+#include "switch/runtime/devices/socket.h"
+#define TRACE(fmt,...) printf("%s: " fmt "\n", __PRETTY_FUNCTION__, ## __VA_ARGS__)
+
+static int s_nxlinkSock = -1;
+
+static void init_nxlink()
+{
+    if (R_FAILED(socketInitializeDefault()))
+        return;
+
+    s_nxlinkSock = nxlinkStdio();
+    if (s_nxlinkSock >= 0)
+        TRACE("printf output now goes to nxlink server");
+    else
+        socketExit();
+}
+
+static void deinit_nxlink()
+{
+    if (s_nxlinkSock >= 0)
+    {
+        close(s_nxlinkSock);
+        socketExit();
+        s_nxlinkSock = -1;
+    }
+}
+#else
+#define TRACE(fmt,...) ((void)0)
+#endif
+#endif
+
 struct bool_option
 {
 	bool value;
@@ -289,6 +324,11 @@ static const char *boolNotOptString (const struct bool_option *option);
 int
 main (int argc, char *argv[])
 {
+#if defined(SWITCH) || defined(__SWITCH__)
+#ifdef DEBUG
+    init_nxlink();
+#endif
+#endif
 	struct options_struct options = {
 		/* .logFile = */            NULL,
 		/* .runMode = */            runMode_normal,
@@ -700,7 +740,13 @@ main (int argc, char *argv[])
 	}
 
 	HFree (options.addons);
-	
+
+#if defined(SWITCH) || defined(__SWITCH__)
+#ifdef DEBUG
+    deinit_nxlink();
+#endif
+#endif
+
 	return EXIT_SUCCESS;
 }
 
