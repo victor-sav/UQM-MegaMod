@@ -243,18 +243,11 @@ prepareContentDir (const char *contentDirName, const char* addonDirName, const c
 		exit (EXIT_FAILURE);
 	}
 
-#if defined(SWITCH) || defined(__SWITCH__)
-    removeSwitchDriveNonAlloc(baseContentPath);
-#endif
-
 	log_add (log_Debug, "Using '%s' as base content dir.", baseContentPath);
 	contentMountHandle = mountContentDir (repository, baseContentPath);
 
 	if (addonDirName)
 	{
-#if defined(SWITCH) || defined(__SWITCH__)
-        addonDirName = removeSwitchDrive(addonDirName);
-#endif
         log_add(log_Debug, "Using '%s' as addon dir.", addonDirName);
     }
 	mountAddonDir (repository, contentMountHandle, addonDirName);
@@ -287,11 +280,7 @@ prepareConfigDir (const char *configDirName) {
 		exit (EXIT_FAILURE);
 	}
 
-#if defined(SWITCH) || defined(__SWITCH__)
-    configDirName = removeSwitchDrive(buf);
-#else
 	configDirName = buf;
-#endif
 
 	log_add (log_Debug, "Using config dir '%s'", configDirName);
 
@@ -339,11 +328,7 @@ prepareSaveDir (void) {
 		exit (EXIT_FAILURE);
 	}
 
-#if defined(SWITCH) || defined(__SWITCH__)
-    saveDirName = removeSwitchDrive(buf);
-#else
 	saveDirName = buf;
-#endif
 
 	setenv("UQM_SAVE_DIR", saveDirName, 1);
 
@@ -380,11 +365,7 @@ prepareMeleeDir (void) {
 		log_add (log_Fatal, "Fatal error: Invalid path to config files.");
 		exit (EXIT_FAILURE);
 	}
-#if defined(SWITCH) || defined(__SWITCH__)
-    meleeDirName = removeSwitchDrive(buf);
-#else
 	meleeDirName = buf;
-#endif
 
 	setenv("UQM_MELEE_DIR", meleeDirName, 1);
 

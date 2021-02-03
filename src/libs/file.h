@@ -39,28 +39,15 @@ extern uio_DirHandle *tempDir;
 
 #ifdef __SWITCH__
 extern char * strchr ( const char *, int );
-
-extern char * strcpy ( char * destination, const char * source );
-
-/* Returns the path without the drive prefix */
-static inline char * removeSwitchDrive(char * p)
+static inline int isSwitchDrive(const char * p)
 {
 	char * buf;
 
-	buf = strchr (p, ':') + 1;
+	buf = strchr (p, ':');
 	if(buf!=NULL)
-		return buf;
+		return buf-p+1;
 	else
-		return NULL;
-}
-
-/* Returns the path without the drive prefix */
-static inline void removeSwitchDriveNonAlloc(char * p)
-{
-    char buf[sizeof(p)];
-    strcpy(buf, p);
-	char * _buf = removeSwitchDrive(buf);
-	strcpy(p, _buf);
+		return 0;
 }
 #endif
 

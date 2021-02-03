@@ -137,6 +137,17 @@ mkdirhier (const char *path)
 	}
 #endif  /* HAVE_UNC_PATHS */
 
+#if defined(SWITCH) || defined(__SWITCH__)
+	{
+        int i;
+        for(i=isSwitchDrive(path);i>0;i--)
+        {
+            *(ptr++) = *(pathstart++);
+        }
+        *ptr = '\0';
+    }
+#endif
+
 	if (*pathstart == '/')
 		*(ptr++) = *(pathstart++);
 
@@ -542,7 +553,7 @@ expandPath (char *dest, size_t len, const char *src, int what)
 			destptr++;
 		}
 	}
-	
+
 	if (what & EP_DOTS) {
 		// At this point backslashes are already replaced by slashes if they
 		// are specified to be path seperators.
@@ -573,6 +584,9 @@ expandPath (char *dest, size_t len, const char *src, int what)
 			// defined.
 		}
 #endif  /* HAVE_UNC_PATHS */
+#if defined(SWITCH) || defined(__SWITCH__)
+        pathStart += isSwitchDrive(pathStart);
+#endif
 		if (pathStart[0] == '/')
 			pathStart++;
 
@@ -648,7 +662,24 @@ expandPath (char *dest, size_t len, const char *src, int what)
 		}
 		*destptr = '\0';
 	}
-	
+
+#if defined(SWITCH) || defined(__SWITCH__)
+    char *srcptr;
+    srcptr = dest;
+    destptr = dest;
+
+    int _isSwitchDrive = isSwitchDrive(dest);
+    for (int i = 0; i < _isSwitchDrive; i++)
+        srcptr++;
+    while (*srcptr != '\0')
+    {
+        char ch = *srcptr;
+        *(destptr++) = *(srcptr++);
+    }
+
+    *destptr = '\0';
+#endif
+
 	HFree (buf);
 	return 0;
 
@@ -684,7 +715,11 @@ expandPathAbsolute (char *dest, size_t destLen, const char *src,
 {
 	const char *orgSrc;
 
+#if defined(SWITCH) || defined(__SWITCH__)
+    if (isSwitchDrive(src) > 0)
+#else
 	if (src[0] == '/' || ((what & EP_SLASHES) && src[0] == '\\'))
+#endif
 	{
 		// Path is already absolute; nothing to do
 		*skipSrc = 0;
