@@ -86,6 +86,7 @@ BOOLEAN DeathBySurrender = FALSE;
 BOOLEAN DeathByMelee = FALSE;
 BOOLEAN DeathBySuicide = FALSE;
 BOOLEAN SpaceMusicOK;
+BOOLEAN DefinitiveEditionPresent;
 
 uio_Repository *repository;
 uio_DirHandle *rootDir;
@@ -157,6 +158,11 @@ LoadKernel (int argc, char *argv[], BOOLEAN ReloadPackages)
 		loadAddon ("classic-hd-fonts");
 		loadAddon ("tarps-choice");
 	}
+
+    if (loadAddon("definitive-edition"))
+    {
+        DefinitiveEditionPresent = TRUE;
+    }
 
 #if defined(SWITCH) || defined(__SWITCH)
     loadAddon("switch");

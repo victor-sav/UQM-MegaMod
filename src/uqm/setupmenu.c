@@ -74,11 +74,13 @@ static void change_template (WIDGET_CHOICE *self, int oldval);
 static void rename_template (WIDGET_TEXTENTRY *self);
 static void rebind_control (WIDGET_CONTROLENTRY *widget);
 static void clear_control (WIDGET_CONTROLENTRY *widget);
+static int do_addons (WIDGET *self, int event); // victor.sav
+static int do_advanced_submenu (WIDGET *self, int event);
 
-#define MENU_COUNT         10
-#define CHOICE_COUNT       60
+#define MENU_COUNT         12
+#define CHOICE_COUNT       61
 #define SLIDER_COUNT        4
-#define BUTTON_COUNT       12
+#define BUTTON_COUNT       15
 #define LABEL_COUNT         5
 #define TEXTENTRY_COUNT     2
 #define CONTROLENTRY_COUNT  8
@@ -104,12 +106,14 @@ static int choice_widths[CHOICE_COUNT] = {
 	3, 2, 2, 2, 2, 3, 3, 2, 2, 2,	// 20-29
 	2, 2, 2, 2, 2, 2, 2, 2, 3, 2,	// 30-39
 	2, 2, 3, 2, 2, 2, 2, 2, 2, 2,	// 40-49
-	3, 2, 2, 3, 2, 2, 2, 2, 2, 3 };	// 50-59
+	3, 2, 2, 3, 2, 2, 2, 2, 2, 3,	// 50-59
+	3 };
 
 static HANDLER button_handlers[BUTTON_COUNT] = {
 	quit_main_menu, quit_sub_menu, do_graphics, do_engine,
-	do_audio, do_cheats, do_keyconfig, do_advanced, do_editkeys, 
-	do_keyconfig, do_music, do_visual };
+	do_audio, do_cheats, do_keyconfig, do_advanced, do_editkeys,
+	do_keyconfig, do_music, do_visual, do_addons, do_advanced_submenu, do_advanced
+};
 
 /* These refer to uninitialized widgets, but that's OK; we'll fill
  * them in before we touch them */
@@ -122,6 +126,7 @@ static WIDGET *main_widgets[] = {
 	(WIDGET *)(&buttons[6]),	// Controls
 	(WIDGET *)(&buttons[7]),	// Advanced
 	(WIDGET *)(&buttons[5]),	// Cheats
+    (WIDGET *)(&buttons[12]),	// Addons victor.sav
 	(WIDGET *)(&labels[4]),		// Spacer
 	(WIDGET *)(&buttons[0]),	// Quit Setup Menu
 	NULL };
@@ -233,8 +238,9 @@ static WIDGET *advanced_widgets[] = {
 	(WIDGET *)(&choices[32]),	// Skip Intro
 	(WIDGET *)(&choices[40]),	// Partial Pickup switch
 	(WIDGET *)(&choices[56]),	// Game Over switch
-	(WIDGET *)(&choices[41]),	// Submenu switch
-	(WIDGET *)(&buttons[1]),	
+	(WIDGET *)(&choices[41]),	// Tutorial switch
+    (WIDGET *)(&buttons[13]),   // Submenu victor.sav
+    (WIDGET *)(&buttons[1]),
 	NULL };
 
 static WIDGET *visual_widgets[] = {
@@ -267,6 +273,19 @@ static WIDGET *editkeys_widgets[] = {
 	(WIDGET *)(&buttons[9]),
 	NULL };
 
+static WIDGET *advanced_submenu_widgets[] = { // victor.sav
+        (WIDGET *)(&choices[60]),	// Saving
+        (WIDGET *)(&labels[4]),		// Spacer
+        (WIDGET *)(&buttons[14]),
+        (WIDGET *)(&buttons[1]),
+        NULL };
+
+static WIDGET *addons_widgets[] = { // VICTOR.SAV
+        (WIDGET *)(&labels[0]),		// Incomplete
+        (WIDGET *)(&labels[4]),		// Spacer
+        (WIDGET *)(&buttons[1]),
+        NULL };
+
 static const struct
 {
 	WIDGET **widgets;
@@ -284,6 +303,8 @@ menu_defs[] =
 	{editkeys_widgets, 7},
 	{music_widgets, 8},
 	{visual_widgets, 9},
+    {addons_widgets, 10},
+    {advanced_submenu_widgets, 11},
 	{NULL, 0}
 };
 
@@ -426,6 +447,33 @@ do_advanced (WIDGET *self, int event)
 	}
 	(void)self;
 	return FALSE;
+}
+
+static int
+do_advanced_submenu (WIDGET *self, int event)
+{
+    if (event == WIDGET_EVENT_SELECT)
+    {
+        next = (WIDGET *)(&menus[11]);
+        (*next->receiveFocus) (next, WIDGET_EVENT_DOWN);
+        return TRUE;
+    }
+    (void)self;
+    return FALSE;
+}
+
+static int
+do_addons (WIDGET *self, int event)
+{
+    if (event == WIDGET_EVENT_SELECT)
+    {
+        next = (WIDGET *)(&menus[10]);
+        populate_seed();
+        (*next->receiveFocus) (next, WIDGET_EVENT_DOWN);
+        return TRUE;
+    }
+    (void)self;
+    return FALSE;
 }
 
 static int
@@ -611,7 +659,8 @@ SetDefaults (void)
 	choices[57].selected = opts.shipDirectionIP;
 	choices[58].selected = opts.orzCompFont;
 	choices[59].selected = opts.controllerType;
-
+	// victor.sav
+    choices[60].selected = opts.saving;
 	sliders[0].value = opts.musicvol;
 	sliders[1].value = opts.sfxvol;
 	sliders[2].value = opts.speechvol;
@@ -677,6 +726,8 @@ PropagateResults (void)
 	opts.spaceMusic = choices[46].selected;
 	opts.volasMusic = choices[47].selected;
 	opts.wholeFuel = choices[48].selected;
+	// victor.sav
+    opts.saving = choices[60].selected;
 	// For Android
 #if defined(ANDROID) || defined(__ANDROID__)
 	opts.directionalJoystick = choices[49].selected;
@@ -1046,10 +1097,11 @@ init_widgets (void)
 
 	/* Menus */
 	title = StringBank_AddOrFindString (bank, GetStringAddress (SetAbsStringTableIndex (SetupTab, 0)));
-	if (SplitString (GetStringAddress (SetAbsStringTableIndex (SetupTab, 1)), '\n', 100, buffer, bank) != MENU_COUNT)
+	int _splitString = SplitString (GetStringAddress (SetAbsStringTableIndex (SetupTab, 1)), '\n', 100, buffer, bank);
+	if (_splitString != MENU_COUNT)
 	{
 		/* TODO: Ignore extras instead of dying. */
-		log_add (log_Fatal, "PANIC: Incorrect number of Menu Subtitles");
+		log_add (log_Fatal, "PANIC: Incorrect number of Menu Subtitles (%d / %d)", _splitString / MENU_COUNT);
 		exit (EXIT_FAILURE);
 	}
 
@@ -1073,7 +1125,7 @@ init_widgets (void)
 	}
 	if (menu_defs[i].widgets != NULL)
 	{
-		log_add (log_Error, "Menu definition array has more items!");
+		log_add (log_Error, "Menu definition array has more items than %d!", i);
 	}
 		
 	/* Options */
@@ -1462,6 +1514,12 @@ SetupMenu (void)
 	s.initialized = FALSE;
 	SetMenuSounds (MENU_SOUND_ARROWS, MENU_SOUND_SELECT);
 	SetupTab = CaptureStringTable (LoadStringTable (SETUP_MENU_STRTAB));
+
+	if (!DefinitiveEditionPresent)
+	{
+
+	}
+
 	if (SetupTab) 
 	{
 		init_widgets ();
@@ -1636,6 +1694,8 @@ GetGlobalOptions (GLOBALOPTS *opts)
 	opts->hazardColors = optHazardColors ? OPTVAL_ENABLED : OPTVAL_DISABLED;
 	opts->orzCompFont = optOrzCompFont ? OPTVAL_ENABLED : OPTVAL_DISABLED;
 	opts->controllerType = res_GetInteger ("mm.controllerType");
+    // victor.sav
+    opts->saving = res_GetInteger ("mm.saving");
 
 	// Serosis: 320x240
 	if (!IS_HD) {
@@ -2112,6 +2172,10 @@ SetGlobalOptions (GLOBALOPTS *opts)
 	// Serosis: Enable alternate font for untranslatable Orz speech 
 	res_PutBoolean("mm.orzCompFont", opts->orzCompFont == OPTVAL_ENABLED);
 	optOrzCompFont = (opts->orzCompFont == OPTVAL_ENABLED);
+
+	// victor.sav: Auto Saving
+    res_PutInteger("mm.saving", opts->saving);
+    optSaving = opts->saving;
 
 	// Serosis: Show which type of controls on screen
 	switch (opts->controllerType) {

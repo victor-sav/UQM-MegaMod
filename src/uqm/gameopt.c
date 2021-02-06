@@ -22,6 +22,7 @@
 #include "colors.h"
 #include "controls.h"
 #include "starmap.h"
+#include "encount.h"
 #include "menustat.h"
 #include "sis.h"
 #include "units.h"
@@ -1422,6 +1423,20 @@ PickGame (BOOLEAN saving, BOOLEAN fromMainMenu)
 }
 
 static BOOLEAN
+IsSavingAllowed() {
+    BOOLEAN _isStation = ((GET_GAME_STATE (GLOBAL_FLAGS_AND_DATA) == (BYTE)~0) && OutfitOrShipyard > 1);
+    BOOLEAN _isHyperSpace = (LOBYTE (GLOBAL (CurrentActivity)) == IN_HYPERSPACE) && GetHeadEncounter() == 0;
+    BOOLEAN _isOuterSolarSystem = playerInSolarSystem() && !playerInInnerSystem() && !playerInPlanetOrbit();
+    switch (optSaving) {
+        case 0: return TRUE;
+        case 1: return _isStation;
+        case 2: return _isStation || _isHyperSpace;
+        case 3: return _isStation || _isHyperSpace || _isOuterSolarSystem;
+    }
+    return FALSE;
+}
+
+static BOOLEAN
 DoGameOptions (MENU_STATE *pMS)
 {
 	if (GLOBAL (CurrentActivity) & CHECK_ABORT)
@@ -1439,10 +1454,16 @@ DoGameOptions (MENU_STATE *pMS)
 		{
 			case SAVE_GAME:
 			case LOAD_GAME:
-				SetFlashRect (NULL);
-				if (PickGame (pMS->CurState == SAVE_GAME, FALSE))
-					return FALSE;
-				SetFlashRect (SFR_MENU_3DO);
+			    if (IsSavingAllowed())
+                {
+                    SetFlashRect(NULL);
+                    if (PickGame(pMS->CurState == SAVE_GAME, FALSE))
+                        return FALSE;
+                    SetFlashRect(SFR_MENU_3DO);
+                } else {
+                    PlayMenuSound (MENU_SOUND_FAILURE);
+                    return TRUE;
+                }
 				break;
 			case QUIT_GAME:
 				if (ConfirmExit ())

@@ -117,7 +117,7 @@ A full list of changes and features can be found on the [Main site](http://megam
 
 ## Contributors
 
-Me (victor.sav), Serosis, SlightlyIntelligentMonkey, Volasaurus, Ala-lala, and Kruzenshtern
+Me (yokai.shogun), Serosis, SlightlyIntelligentMonkey, Volasaurus, Ala-lala, and Kruzenshtern
 
 The main menu music for the MegaMod is brought to you by Saibuster A.K.A. Itamar.Levy: https://soundcloud.com/itamar-levy-1/star-control-hyperdrive-remix, Mark Vera A.K.A. Jouni Airaksinen: https://www.youtube.com/watch?v=rsSc7x-p4zw, and Rush AX: http://star-control.com/fan/music.php.
 

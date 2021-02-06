@@ -71,6 +71,7 @@ extern BOOLEAN HDPackPresent;
 extern BOOLEAN comingFromInit;
 extern BOOLEAN EndlessSCLoaded;
 extern BOOLEAN VolasPackPresent;
+extern BOOLEAN DefinitiveEditionPresent;
 extern BYTE Rando;
 extern BOOLEAN DeathBySurrender;
 extern BOOLEAN DeathByMelee;

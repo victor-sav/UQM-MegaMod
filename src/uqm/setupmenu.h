@@ -81,7 +81,7 @@ typedef enum {
 	OPTVAL_HORUS,
 	OPTVAL_SEKHMET
 } OPT_GODTYPE;
- 
+
 typedef enum {
 	OPTVAL_NORMAL,
 	OPTVAL_SLOW,
@@ -115,6 +115,13 @@ typedef enum {
 	OPTVAL_TRILINEAR
 } OPT_MELEEZOOM;
 
+typedef enum {
+    OPTVAL_SAVEON,
+    OPTVAL_SAVEOFF,
+    OPTVAL_STATION,
+    OPTVAL_HYPERSPACE
+} OPT_SAVING;
+
 /* At the moment, CONTROL_TEMPLATE is directly in this structure.  If
  * CONTROL_TEMPLATE and the options available diverge, this will need
  * to change */
@@ -131,6 +138,7 @@ typedef struct globalopts_struct {
 	OPT_DIFFICULTY difficulty;
 	OPT_MELEEZOOM meleezoom;
 	OPT_CONTROLLER controllerType;
+	OPT_SAVING saving;
 	OPT_ENABLABLE fullscreen, subtitles, scanlines, fps, stereo, music3do, musicremix, speech, keepaspect,
 				cheatMode, mainMenuMusic, nebulae, orbitingPlanets, texturedPlanets, godMode,
 				bubbleWarp, unlockShips, headStart, unlockUpgrades, infiniteRU, skipIntro, infiniteFuel,

@@ -194,6 +194,8 @@ struct options_struct
 	DECL_CONFIG_OPTION(bool, unlockUpgrades);
 	DECL_CONFIG_OPTION(bool, infiniteRU);
 	DECL_CONFIG_OPTION(bool, skipIntro);
+	// victor.sav
+    DECL_CONFIG_OPTION(int, saving);
 	// JMS
 	DECL_CONFIG_OPTION(bool, mainMenuMusic);
 	DECL_CONFIG_OPTION(bool, nebulae);
@@ -422,6 +424,7 @@ main (int argc, char *argv[])
 		INIT_CONFIG_OPTION(	 hazardColors,		false),
 		INIT_CONFIG_OPTION(	 orzCompFont,		false),		
 		INIT_CONFIG_OPTION(	 optControllerType,	0),
+        INIT_CONFIG_OPTION(	 saving,    		0),
 	};
 	struct options_struct defaults = options;
 	int optionsResult;
@@ -596,6 +599,8 @@ main (int argc, char *argv[])
 	optUnlockUpgrades = options.unlockUpgrades.value;
 	optInfiniteRU = options.infiniteRU.value;
 	optSkipIntro = options.skipIntro.value;
+	// victor.sav
+    optSaving = options.saving.value;
 	// JMS
 	optMainMenuMusic = options.mainMenuMusic.value;
 	optNebulae = options.nebulae.value;
@@ -960,6 +965,12 @@ getUserConfigOptions (struct options_struct *options)
 	getBoolConfigValue (&options->unlockUpgrades, "cheat.unlockUpgrades");
 	getBoolConfigValue (&options->infiniteRU, "cheat.infiniteRU");
 	getBoolConfigValue (&options->skipIntro, "mm.skipIntro");
+	// victor.sav
+    if (res_IsInteger ("mm.saving"))
+    {
+        options->saving.value = res_GetInteger ("mm.saving");
+        options->saving.set = true;
+    }
 	// JMS
 	getBoolConfigValue (&options->mainMenuMusic, "mm.mainMenuMusic");
 	getBoolConfigValue (&options->nebulae, "mm.nebulae");

@@ -71,6 +71,8 @@ BOOLEAN optUnlockUpgrades;
 BOOLEAN optInfiniteRU;
 DWORD oldRU;
 BOOLEAN optSkipIntro;
+// victor.sav
+int optSaving;
 // JMS
 BOOLEAN optMainMenuMusic;
 BOOLEAN optNebulae;
